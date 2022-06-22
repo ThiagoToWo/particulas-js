@@ -84,7 +84,6 @@ form.addEventListener("submit", (e) => {
     const v = Number(form.v.value);
     const refletiu = form.refletir.checked;
     const fundiu = form.fundir.checked;
-    const browniano = form.browniano.checked;
 
     canvas.style.width = a + "px";
     canvas.style.height = a + "px";
