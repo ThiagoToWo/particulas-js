@@ -8,71 +8,6 @@ const resp3 = document.querySelector("#l");
 let elementos;
 let acao;
 
-/*=====================================Classe Partícula====================================*/
-class Particula {
-    constructor(x, y, r, vx, vy, cor) {
-        this.x = x;
-        this.y = y;
-        this.r = r;
-        this.vx = vx;
-        this.vy = vy;
-        this.cor = cor;
-        this.ativo = true;
-        this.ativoAtualizar = true;
-        this.ativoDesenhar = true;
-        this.ativoColidir = true;
-        this.rastro = false;
-    }
-
-    atualizar() {
-        if (!this.ativoAtualizar) return;
-        if (!this.ativo) return;
-
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x > 300 - this.r) {
-            this.vx *= -1;
-            this.x = 300 - this.r;
-        }
-
-        if (this.x < this.r) {
-            this.vx *= -1;
-            this.x = this.r;
-        }
-
-        if (this.y > 300 - this.r) {
-            this.vy *= -1;
-            this.y = 300 - this.r;
-        }
-
-        if (this.y < this.r) {
-            this.vy *= -1;
-            this.y = this.r;
-        }
-    }
-
-    desenhar() {
-        if (!this.ativoDesenhar) return;
-        if (!this.ativo) return;
-
-        ctx.fillStyle = this.cor;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    colidiuCom(outro) {
-        if (!this.ativoColidir) return;
-        if (!this.ativo) return;
-
-        return (this.x + this.r >= outro.x - outro.r) &&
-            (this.x - this.r <= outro.x + outro.r) &&
-            (this.y + this.r >= outro.y - outro.r) &&
-            (this.y - this.r <= outro.y + outro.r);
-    }
-}
-
 /*=====================================Funções de Formulário====================================*/
 form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -102,7 +37,7 @@ form.addEventListener("submit", (e) => {
     let vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
     let vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
     const raio = (d / 2) * (300 / a);
-    let p = new Particula(x, y, raio, vx, vy, "red");
+    let p = new Particula(x, y, raio, vx, vy, "red", ctx);
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
@@ -110,7 +45,7 @@ form.addEventListener("submit", (e) => {
         y = d / 2 + Math.random() * (300 - d);
         vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
         vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
-        p = new Particula(x, y, raio, vx, vy, "black");
+        p = new Particula(x, y, raio, vx, vy, "black", ctx);
         elementos.push(p);
     }
 
