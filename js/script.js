@@ -32,8 +32,8 @@ form.addEventListener("submit", (e) => {
     resp2.innerText = `Período Médio entre Colisões (T) = ${T.toPrecision(5)} s`;
     resp3.innerText = `Livre Percurso Médio (l) = ${l.toPrecision(5)} cm`;
 
-    let x = d / 2 + Math.random() * (300 - d);
-    let y = d / 2 + Math.random() * (300 - d);
+    let x = d / 2 + Math.random() * (canvas.width - d);
+    let y = d / 2 + Math.random() * (canvas.height - d);
     let vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
     let vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
     const raio = (d / 2) * (300 / a);
@@ -41,8 +41,8 @@ form.addEventListener("submit", (e) => {
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
-        x = d / 2 + Math.random() * (300 - d);
-        y = d / 2 + Math.random() * (300 - d);
+        x = d / 2 + Math.random() * (canvas.width - d);
+        y = d / 2 + Math.random() * (canvas.height - d);
         vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
         vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
         p = new Particula(x, y, raio, vx, vy, "black", ctx);
@@ -60,14 +60,14 @@ form.addEventListener("submit", (e) => {
             elementos[i].ativoDesenhar = false;
         }
 
-        ctx.clearRect(0, 0, 300, 300);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         acao = setInterval(() => { processarTudo(refletir) }, 100)
     }
 });
 
 form.addEventListener("reset", () => {
     clearInterval(acao);
-    ctx.clearRect(0, 0, 300, 300);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.style.width = "300px";
     canvas.style.height = "300px";
     resp1.innerText = "";
@@ -77,7 +77,7 @@ form.addEventListener("reset", () => {
 
 /*=====================================Funções de Processamento====================================*/
 function processarTudo(callback) {
-    if (!elementos[0].rastro) ctx.clearRect(0, 0, 300, 300);
+    if (!elementos[0].rastro) ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < elementos.length; i++) {
         elementos[i].atualizar();
