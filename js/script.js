@@ -105,9 +105,19 @@ function refletir(a, b) {
 function fundir(a, b) {
     let vx = (a.vx + b.vx) / 2;
     let vy = (a.vy + b.vy) / 2;
-    a.vx = vx;
-    a.vy = vy;
-    a.r = Math.sqrt(a.r * a.r + b.r * b.r);
-    b.ativo = false;
-    b.x = 1500;
+
+    if (a.r > b.r) {
+        a.vx = vx;
+        a.vy = vy;
+        a.r = Math.sqrt(a.r * a.r + b.r * b.r);
+        b.ativo = false;
+        b.x = 1500;
+    } else {
+        b.vx = vx;
+        b.vy = vy;
+        b.r = Math.sqrt(a.r * a.r + b.r * b.r);
+        a.ativo = false;
+        a.x = 1500;
+    }
+
 }
