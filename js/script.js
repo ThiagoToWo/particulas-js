@@ -20,8 +20,8 @@ form.addEventListener("submit", (e) => {
     const refletiu = form.refletir.checked;
     const fundiu = form.fundir.checked;
 
-    canvas.style.width = a + "px";
-    canvas.style.height = a + "px";
+    canvas.width = a;
+    canvas.height = a;
 
     const n = N / (a * a);
     const f = Math.SQRT2 * n * Math.PI * d * d * v;
@@ -36,8 +36,7 @@ form.addEventListener("submit", (e) => {
     let y = d / 2 + Math.random() * (canvas.height - d);
     let vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
     let vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
-    const raio = (d / 2) * (300 / a);
-    let p = new Particula(x, y, raio, vx, vy, "red", ctx);
+    let p = new Particula(x, y, d/2, vx, vy, "red", ctx);
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
@@ -45,7 +44,7 @@ form.addEventListener("submit", (e) => {
         y = d / 2 + Math.random() * (canvas.height - d);
         vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
         vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
-        p = new Particula(x, y, raio, vx, vy, "black", ctx);
+        p = new Particula(x, y, d/2, vx, vy, "black", ctx);
         elementos.push(p);
     }
 
