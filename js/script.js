@@ -5,8 +5,11 @@ const form = document.querySelector("form");
 const resp1 = document.querySelector("#f");
 const resp2 = document.querySelector("#T");
 const resp3 = document.querySelector("#l");
+const resp4 = document.querySelector("#tReal");
 let elementos;
 let acao;
+let tReal;
+let contandoTempo;
 
 /*=====================================Funções de Formulário====================================*/
 form.addEventListener("submit", (e) => {
@@ -48,6 +51,9 @@ form.addEventListener("submit", (e) => {
         elementos.push(p);
     }
 
+    tReal = 0;
+    contandoTempo = true;
+
     if (refletiu) { // processamento com reflexão
         acao = setInterval(() => { processarTudo(refletir) }, 100);
     } else if (fundiu) { // processamento com fusão
@@ -72,6 +78,7 @@ form.addEventListener("reset", () => {
     resp1.innerText = "";
     resp2.innerText = "";
     resp3.innerText = "";
+    resp4.innerText = "";
 });
 
 /*=====================================Funções de Processamento====================================*/
@@ -82,13 +89,18 @@ function processarTudo(callback) {
         elementos[i].atualizar();
         elementos[i].desenhar();
 
-        for (let j = 0; j < elementos.length; j++) {
-            if (i == j) continue;
-
+        for (let j = i + 1; j < elementos.length; j++) {
             if (elementos[i].colidiuCom(elementos[j])) {
                 callback(elementos[i], elementos[j]);
             }
         }
+    }
+
+    
+    if (contandoTempo) {
+        tReal += 0.1;
+        resp4.innerText = `Tempo Real de Experiência = ${tReal.toPrecision(5)} s`;
+        if (elementos.length == 1) contandoTempo = false;
     }
 }
 
@@ -109,14 +121,11 @@ function fundir(a, b) {
         a.vx = vx;
         a.vy = vy;
         a.r = Math.sqrt(a.r * a.r + b.r * b.r);
-        b.ativo = false;
-        b.x = 1500;
+        elementos.splice(elementos.indexOf(b), 1);
     } else {
         b.vx = vx;
         b.vy = vy;
         b.r = Math.sqrt(a.r * a.r + b.r * b.r);
-        a.ativo = false;
-        a.x = 1500;
+        elementos.splice(elementos.indexOf(a), 1);
     }
-
 }
