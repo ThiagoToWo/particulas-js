@@ -6,6 +6,7 @@ class Particula {
         this.r = r; // raio
         this.vx = vx; // componente x da velocidade
         this.vy = vy; // componente y da velocidade
+        this.m = 1; // massa unitária
         this.cor = cor; // cor
         this.ctx = ctx; // contexto 2d do canvas onde será desenhado
         this.ativo = true; // se pode atualizar, desenhar e colidir

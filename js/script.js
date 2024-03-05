@@ -38,15 +38,17 @@ form.addEventListener("submit", (e) => {
     let x = d / 2 + Math.random() * (canvas.width - d / 2);
     let y = d / 2 + Math.random() * (canvas.height - d / 2);    //melhorar essa velocidade
     let vx = -v + Math.random() * 2 * v;
-    let vy = (0.5 - Math.random()) * Math.sqrt(v * v - vx * vx);
+    let sinal = Math.random() >= 0.5 ? 1 : -1;
+    let vy = sinal * Math.sqrt(v * v - vx * vx);
     let p = new Particula(x, y, d/2, vx, vy, "red", ctx);
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
-        x = d / 2 + Math.random() * (canvas.width - d);
-        y = d / 2 + Math.random() * (canvas.height - d);
-        let vx = -v + Math.random() * 2 * v;
-        let vy = (0.5 - Math.random()) * Math.sqrt(v * v - vx * vx);
+        x = d / 2 + Math.random() * (canvas.width - d / 2);
+        y = d / 2 + Math.random() * (canvas.height - d / 2);
+        vx = -v + Math.random() * 2 * v;
+        sinal = Math.random() >= 0.5 ? 1 : -1;
+        vy = sinal * Math.sqrt(v * v - vx * vx);
         p = new Particula(x, y, d/2, vx, vy, "black", ctx);
         elementos.push(p);
     }
@@ -117,17 +119,19 @@ function refletir(a, b) {
 }
 
 function fundir(a, b) {
-    let x = (a.r**2 * a.x + b.r**2 * b.x) / (a.r**2 + b.r**2);
-    let y = (a.r**2 * a.y + b.r**2 * b.y) / (a.r**2 + b.r**2);
-    let vx = (a.r**2 * a.vx + b.r**2 * b.vx) / (a.r**2 + b.r**2);
-    let vy = (a.r**2 * a.vy + b.r**2 * b.vy) / (a.r**2 + b.r**2);
-    let r = Math.sqrt(a.r**2 + b.r**2);    
-
+    const m = a.m + b.m; 
+    const x = (a.m * a.x + b.m * b.x) / m;
+    const y = (a.m * a.y + b.m * b.y) / m;
+    const vx = (a.m * a.vx + b.m * b.vx) / m;
+    const vy = (a.m * a.vy + b.m * b.vy) / m;
+    const r = Math.sqrt(a.r**2 + b.r**2); 
+    
     a.x = x;
     a.y = y;
     a.r = r;
     a.vx = vx;
     a.vy = vy;
+    a.m = m;
     elementos.splice(elementos.indexOf(b), 1);
 }
 
@@ -138,8 +142,8 @@ function momento() {
 
     for (let i = 0; i < elementos.length; i++) {
         e = elementos[i];
-        qx += e.r**2 * e.vx;
-        qy += e.r**2 * e.vy;
+        qx += e.m * e.vx;
+        qy += e.m * e.vy;
     }
 
     console.log("qx =", qx, "qy =", qy, "q = ", Math.sqrt(qx**2 + qy**2));
