@@ -37,6 +37,7 @@ form.addEventListener("submit", (e) => {
 
     let x = d / 2 + Math.random() * (canvas.width - d);
     let y = d / 2 + Math.random() * (canvas.height - d);
+    //melhorar essa velocidade
     let vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
     let vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
     let p = new Particula(x, y, d/2, vx, vy, "red", ctx);
@@ -114,18 +115,16 @@ function refletir(a, b) {
 }
 
 function fundir(a, b) {
-    let vx = (a.vx + b.vx) / 2;
-    let vy = (a.vy + b.vy) / 2;
+    let x = (a.r**2 * a.x + b.r**2 * b.x) / (a.r**2 + b.r**2);
+    let y = (a.r**2 * a.y + b.r**2 * b.y) / (a.r**2 + b.r**2);
+    let vx = (a.r**2 * a.vx + b.r**2 * b.vx) / (a.r**2 + b.r**2);
+    let vy = (a.r**2 * a.vy + b.r**2 * b.vy) / (a.r**2 + b.r**2);
+    let r = Math.sqrt(a.r**2 + b.r**2);    
 
-    if (a.r > b.r) {
-        a.vx = vx;
-        a.vy = vy;
-        a.r = Math.sqrt(a.r * a.r + b.r * b.r);
-        elementos.splice(elementos.indexOf(b), 1);
-    } else {
-        b.vx = vx;
-        b.vy = vy;
-        b.r = Math.sqrt(a.r * a.r + b.r * b.r);
-        elementos.splice(elementos.indexOf(a), 1);
-    }
+    a.x = x;
+    a.y = y;
+    a.r = r;
+    a.vx = vx;
+    a.vy = vy;
+    elementos.splice(elementos.indexOf(b), 1);
 }
