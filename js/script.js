@@ -35,25 +35,26 @@ form.addEventListener("submit", (e) => {
     resp2.innerText = `Período Médio entre Colisões (T) = ${T.toPrecision(5)} s`;
     resp3.innerText = `Livre Percurso Médio (l) = ${l.toPrecision(5)} cm`;
 
-    let x = d / 2 + Math.random() * (canvas.width - d);
-    let y = d / 2 + Math.random() * (canvas.height - d);
-    //melhorar essa velocidade
-    let vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
-    let vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
+    let x = d / 2 + Math.random() * (canvas.width - d / 2);
+    let y = d / 2 + Math.random() * (canvas.height - d / 2);    //melhorar essa velocidade
+    let vx = -v + Math.random() * 2 * v;
+    let vy = (0.5 - Math.random()) * Math.sqrt(v * v - vx * vx);
     let p = new Particula(x, y, d/2, vx, vy, "red", ctx);
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
         x = d / 2 + Math.random() * (canvas.width - d);
         y = d / 2 + Math.random() * (canvas.height - d);
-        vx = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.random() * v;
-        vy = Math.pow(-1, Math.floor(Math.random() * 10)) * Math.sqrt(v * v - vx * vx);
+        let vx = -v + Math.random() * 2 * v;
+        let vy = (0.5 - Math.random()) * Math.sqrt(v * v - vx * vx);
         p = new Particula(x, y, d/2, vx, vy, "black", ctx);
         elementos.push(p);
     }
 
     tReal = 0;
     contandoTempo = true;
+
+    momento();
 
     if (refletiu) { // processamento com reflexão
         acao = setInterval(() => { processarTudo(refletir) }, 100);
@@ -97,6 +98,7 @@ function processarTudo(callback) {
         }
     }
 
+    momento();
     
     if (contandoTempo) {
         tReal += 0.1;
@@ -127,4 +129,18 @@ function fundir(a, b) {
     a.vx = vx;
     a.vy = vy;
     elementos.splice(elementos.indexOf(b), 1);
+}
+
+function momento() {
+    //Cálculo do momento linear em cada componente
+    let qx = 0;
+    let qy = 0;
+
+    for (let i = 0; i < elementos.length; i++) {
+        e = elementos[i];
+        qx += e.r**2 * e.vx;
+        qy += e.r**2 * e.vy;
+    }
+
+    console.log("qx =", qx, "qy =", qy, "q = ", Math.sqrt(qx**2 + qy**2));
 }
