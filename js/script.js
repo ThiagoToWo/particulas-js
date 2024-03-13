@@ -40,7 +40,7 @@ form.addEventListener("submit", (e) => {
     let vx = -v + Math.random() * 2 * v;
     let sinal = Math.random() >= 0.5 ? 1 : -1;
     let vy = sinal * Math.sqrt(v * v - vx * vx);
-    let p = new Particula(x, y, d/2, vx, vy, "red", ctx);
+    let p = new Particula(x, y, d / 2, vx, vy, "red", ctx);
     elementos = [p];
 
     for (let i = 0; i < N - 1; i++) {
@@ -49,7 +49,7 @@ form.addEventListener("submit", (e) => {
         vx = -v + Math.random() * 2 * v;
         sinal = Math.random() >= 0.5 ? 1 : -1;
         vy = sinal * Math.sqrt(v * v - vx * vx);
-        p = new Particula(x, y, d/2, vx, vy, "black", ctx);
+        p = new Particula(x, y, d / 2, vx, vy, "black", ctx);
         elementos.push(p);
     }
 
@@ -101,7 +101,7 @@ function processarTudo(callback) {
     }
 
     momento();
-    
+
     if (contandoTempo) {
         tReal += 0.1;
         resp4.innerText = `Tempo Real de Experiência = ${tReal.toPrecision(5)} s`;
@@ -110,22 +110,55 @@ function processarTudo(callback) {
 }
 
 function refletir(a, b) {
-    let v = a.vx;
-    a.vx = b.vx;
-    b.vx = v;
-    v = a.vy;
-    a.vy = b.vy;
-    b.vy = v;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const angulo = Math.atan2(dx, dy);
+    const sen = Math.sin(angulo);
+    const cos = Math.cos(angulo);
+    
+    let x0 = 0;
+    let y0 = 0;
+
+    let x1 = dx * cos + dy * sen;
+    let y1 = dy * cos - dx * sen;
+
+    let vx0 = a.vx * cos + a.vy * sen;
+    let vy0 = a.vy * cos - a.vy * sen;
+
+    let vx1 = b.vx * cos + b.vy * sen;
+    let vy1 = b.vy * cos - b.vy * sen;
+
+    let vxRel = vx0 - vx1;
+    vx0 = ((a.m - b.m) * vx0 + 2 * b.m * vx1) / (a.m + b.m);
+    vx1 = vxRel + vx0;
+
+    x0 += vx0;
+    x1 += vx1;
+
+    let x0Final = x0 * cos - y0 * sen;
+    let y0Final = y0 * cos + x0 * sen;
+    let x1Final = x1 * cos - y1 * sen;
+    let y1Final = y1 * cos + x1 * sen;
+    
+    b.x = a.x + x1Final;
+    b.y = a.y + y1Final;
+    a.x = a.x + x0Final;
+    a.y = a.y + y0Final;
+    
+    a.vx = vx0 * cos - vy0 * sen;
+    a.vy = vy0 * cos + vx0 * sen;
+    b.vx = vx1 * cos - vy1 * sen;
+    b.vy = vy1 * cos + vx1 * sen;
 }
 
 function fundir(a, b) {
-    const m = a.m + b.m; 
+    const m = a.m + b.m;
     const x = (a.m * a.x + b.m * b.x) / m;
     const y = (a.m * a.y + b.m * b.y) / m;
     const vx = (a.m * a.vx + b.m * b.vx) / m;
     const vy = (a.m * a.vy + b.m * b.vy) / m;
-    const r = Math.sqrt(a.r**2 + b.r**2); 
-    
+    const r = Math.sqrt(a.r ** 2 + b.r ** 2);
+
     a.x = x;
     a.y = y;
     a.r = r;
@@ -139,12 +172,14 @@ function momento() {
     //Cálculo do momento linear em cada componente
     let qx = 0;
     let qy = 0;
+    let q;
 
     for (let i = 0; i < elementos.length; i++) {
-        e = elementos[i];
+        const e = elementos[i];        
         qx += e.m * e.vx;
         qy += e.m * e.vy;
+        q = Math.sqrt(qx * qx + qy * qy);
     }
 
-    console.log("qx =", qx, "qy =", qy, "q = ", Math.sqrt(qx**2 + qy**2));
+    console.log("qx =", qx, "qy =", qy, "q = ", q);
 }
